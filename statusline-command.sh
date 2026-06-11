@@ -3,7 +3,7 @@
 # 신호등 바(초록<50 / 노랑50-79 / 빨강≥80), 토큰 사용량 표시, 비용 없음
 #
 #   LINE 1  📂 …/slack-offboarding-bot │ (main) ✗ │ Opus 4.8 │ high 💡
-#   LINE 2  📝 █░░░░░░░░░░░░░░ 9% 89K/1M │ 📊 5H ███████░░░ 75% (3시간 14분)
+#   LINE 2  📝 █░░░░░░░░░ 16% 156K/1M │ 📊 5H █████░ 88% (2H 30M)
 
 input=$(cat)
 
@@ -92,7 +92,7 @@ printf "%b\n" "$line1"
 line2=""
 
 if [ -n "$used" ] && [ "$used" != "null" ]; then
-  used_int=$(printf "%.0f" "$used"); make_bar "$used_int" 15
+  used_int=$(printf "%.0f" "$used"); make_bar "$used_int" 10
   tok=""
   if [ -n "$total_input" ] && [ "$total_input" != "null" ] \
      && [ -n "$ctx_size" ] && [ "$ctx_size" != "null" ]; then
@@ -129,13 +129,13 @@ elif [ -f "$SL_CACHE" ]; then
 fi
 
 if [ -n "$fh_pct" ] && [ "$fh_pct" != "null" ]; then
-  fh_int=$(printf "%.0f" "$fh_pct"); make_bar "$fh_int" 10
+  fh_int=$(printf "%.0f" "$fh_pct"); make_bar "$fh_int" 6
   reset_str=""
   if [ -n "$fh_reset" ] && [ "$fh_reset" != "null" ]; then
     diff=$(( fh_reset - now ))
     if [ "$diff" -gt 0 ]; then
       h=$(( diff / 3600 )); m=$(( (diff % 3600) / 60 ))
-      if [ "$h" -gt 0 ]; then reset_str=" \033[2m(${h}시간 ${m}분)\033[0m"; else reset_str=" \033[2m(${m}분)\033[0m"; fi
+      if [ "$h" -gt 0 ]; then reset_str=" \033[2m(${h}H ${m}M)\033[0m"; else reset_str=" \033[2m(${m}M)\033[0m"; fi
     fi
   fi
   if [ -n "$fh_stale" ]; then
