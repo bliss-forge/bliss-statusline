@@ -1,0 +1,6 @@
+# OS / editor
+.DS_Store
+*.swp
+
+# settings backups produced by install.sh
+settings.json.bak.*
