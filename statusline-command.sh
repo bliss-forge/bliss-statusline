@@ -3,7 +3,7 @@
 # 신호등 바(초록<50 / 노랑50-79 / 빨강≥80), 토큰 사용량 표시, 비용 없음
 #
 #   LINE 1  📂 …/slack-offboarding-bot │ (main) ✗ │ Opus 4.8 │ high 💡
-#   LINE 2  📝 █░░░░░░░░░ 16% 156K/1M │ 📊 5H █████░ 88% (2H 30M)
+#   LINE 2  📝 █░░░░░░░░░ 16% 156K/1M │ 📊 5H ████████░░ 88% (2H 30M)
 
 input=$(cat)
 
@@ -129,7 +129,7 @@ elif [ -f "$SL_CACHE" ]; then
 fi
 
 if [ -n "$fh_pct" ] && [ "$fh_pct" != "null" ]; then
-  fh_int=$(printf "%.0f" "$fh_pct"); make_bar "$fh_int" 6
+  fh_int=$(printf "%.0f" "$fh_pct"); make_bar "$fh_int" 10
   reset_str=""
   if [ -n "$fh_reset" ] && [ "$fh_reset" != "null" ]; then
     diff=$(( fh_reset - now ))
