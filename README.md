@@ -1,6 +1,6 @@
-# bliss-statusline 📊 — 토큰이 바닥나기 전에 미리 본다
+# bliss-statusline
 
-> Claude Code 작업 정보와 컨텍스트·5시간 사용량을, 터미널 두 줄에.
+> 작업 정보 및 컨텍스트/5시간 사용량을 가시성 있게 확인하기 위함.
 
 ![macOS](https://img.shields.io/badge/macOS-supported-000000?style=flat-square&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-supported-FCC624?style=flat-square&logo=linux&logoColor=black)
