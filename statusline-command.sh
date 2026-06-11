@@ -2,8 +2,8 @@
 # Claude Code statusLine — 2-line layout
 # 신호등 바(초록<50 / 노랑50-79 / 빨강≥80), 토큰 사용량 표시, 비용 없음
 #
-#   LINE 1  📂 …/slack-offboarding-bot │ 🌿(main) ✗ │ 🧠 Opus 4.8 │ high 💡
-#   LINE 2  📝 █░░░░░░░░░░░░░░ 9% 89K/1M │ 🕔 5H ███████░░░ 75% (3시간 14분)
+#   LINE 1  📂 …/slack-offboarding-bot │ (main) ✗ │ Opus 4.8 │ high 💡
+#   LINE 2  📝 █░░░░░░░░░░░░░░ 9% 89K/1M │ 📊 5H ███████░░░ 75% (3시간 14분)
 
 input=$(cat)
 
@@ -73,11 +73,11 @@ SEP="\033[2m │ \033[0m"
 segs=()
 segs+=("$(printf '\033[1;34m📂 %s\033[0m' "$short_cwd")")
 if [ -n "$git_branch" ]; then
-  g=$(printf '\033[36m🌿(%s)\033[0m' "$git_branch")
+  g=$(printf '\033[36m(%s)\033[0m' "$git_branch")
   [ -n "$git_dirty" ] && g="${g} ${git_dirty}"
   segs+=("$g")
 fi
-[ -n "$model_short" ] && segs+=("$(printf '\033[1;36m🧠 %s\033[0m' "$model_short")")
+[ -n "$model_short" ] && segs+=("$(printf '\033[1;36m%s\033[0m' "$model_short")")
 [ -n "$effort_str" ]  && segs+=("$effort_str")
 
 line1=""
@@ -139,9 +139,9 @@ if [ -n "$fh_pct" ] && [ "$fh_pct" != "null" ]; then
     fi
   fi
   if [ -n "$fh_stale" ]; then
-    fh_seg=$(printf '\033[2m🕔 5H\033[0m %b%s\033[0m \033[1m%b~%d%%\033[0m \033[2m(이전)\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
+    fh_seg=$(printf '\033[2m📊 5H\033[0m %b%s\033[0m \033[1m%b~%d%%\033[0m \033[2m(이전)\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
   else
-    fh_seg=$(printf '\033[2m🕔 5H\033[0m %b%s\033[0m \033[1m%b%d%%\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
+    fh_seg=$(printf '\033[2m📊 5H\033[0m %b%s\033[0m \033[1m%b%d%%\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
   fi
   fh_seg="${fh_seg}${reset_str}"
   if [ -z "$line2" ]; then line2="$fh_seg"; else line2="${line2}${SEP}${fh_seg}"; fi
