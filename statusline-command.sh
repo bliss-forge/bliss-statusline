@@ -106,17 +106,43 @@ if [ -n "$used" ] && [ "$used" != "null" ]; then
 fi
 
 # 5H 사용량 한도 (Pro/Max 전용)
+# rate_limits 는 "첫 API 응답 이후"에만 들어옴(세션 시작 시엔 없음) → 마지막 값을 캐시했다가
+# 데이터가 없을 때 폴백 표시. 단 캐시된 리셋 시각이 안 지났을 때(같은 5시간 윈도우)만 유효.
+now=$(date +%s)
+SL_CACHE="$(dirname "${BASH_SOURCE[0]}")/.statusline-5h-cache"
+fh_stale=""
+
+if [ -n "$fh_pct" ] && [ "$fh_pct" != "null" ]; then
+  # 실제 값 → 캐시에 원자적으로 저장
+  printf '%s %s\n' "$fh_pct" "${fh_reset:-}" > "$SL_CACHE.tmp.$$" 2>/dev/null \
+    && mv -f "$SL_CACHE.tmp.$$" "$SL_CACHE" 2>/dev/null
+elif [ -f "$SL_CACHE" ]; then
+  # 데이터 없음(시작 직후) → 캐시 폴백
+  read -r c_pct c_reset < "$SL_CACHE" 2>/dev/null || true
+  if [ -n "${c_pct:-}" ] && [ "$c_pct" != "null" ]; then
+    if [ -z "${c_reset:-}" ] || [ "$c_reset" = "null" ]; then
+      fh_pct="$c_pct"; fh_reset=""; fh_stale=1
+    elif [ "$c_reset" -gt "$now" ] 2>/dev/null; then
+      fh_pct="$c_pct"; fh_reset="$c_reset"; fh_stale=1   # 같은 윈도우 → 유효
+    fi
+  fi
+fi
+
 if [ -n "$fh_pct" ] && [ "$fh_pct" != "null" ]; then
   fh_int=$(printf "%.0f" "$fh_pct"); make_bar "$fh_int" 10
   reset_str=""
   if [ -n "$fh_reset" ] && [ "$fh_reset" != "null" ]; then
-    diff=$(( fh_reset - $(date +%s) ))
+    diff=$(( fh_reset - now ))
     if [ "$diff" -gt 0 ]; then
       h=$(( diff / 3600 )); m=$(( (diff % 3600) / 60 ))
       if [ "$h" -gt 0 ]; then reset_str=" \033[2m(${h}시간 ${m}분)\033[0m"; else reset_str=" \033[2m(${m}분)\033[0m"; fi
     fi
   fi
-  fh_seg=$(printf '\033[2m⏳ 5H\033[0m %b%s\033[0m \033[1m%b%d%%\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
+  if [ -n "$fh_stale" ]; then
+    fh_seg=$(printf '\033[2m⏳ 5H\033[0m %b%s\033[0m \033[1m%b~%d%%\033[0m \033[2m(이전)\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
+  else
+    fh_seg=$(printf '\033[2m⏳ 5H\033[0m %b%s\033[0m \033[1m%b%d%%\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
+  fi
   fh_seg="${fh_seg}${reset_str}"
   if [ -z "$line2" ]; then line2="$fh_seg"; else line2="${line2}${SEP}${fh_seg}"; fi
 fi

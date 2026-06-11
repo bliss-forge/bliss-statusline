@@ -94,7 +94,7 @@ rm -f ~/.claude/statusline-command.sh
 ## FAQ
 
 **Q. 5시간 막대(`⏳ 5H`)가 안 보여요.**
-A. Pro/Max 플랜에서 Claude Code 가 `rate_limits` 를 넘겨줄 때만 표시됩니다. 값이 없으면 그 세그먼트는 조용히 생략됩니다.
+A. Claude Code 는 `rate_limits` 를 **첫 API 응답 이후에만** 넘겨줍니다(공식 동작, Pro/Max 한정). 그래서 *세션을 막 시작한 시점*엔 안 보이고, 첫 메시지를 주고받으면 나타납니다. 이 공백을 메우려 마지막 값을 캐시해 두고 시작 직후엔 `⏳ 5H ~17% (이전)` 처럼 **지난 세션 값**으로 보여줍니다(첫 턴 후 실시간 값으로 교체). API/Console 요금제는 `rate_limits` 자체가 없어 표시되지 않습니다.
 
 **Q. git 브랜치가 안 보여요.**
 A. 현재 작업 디렉토리가 git 레포일 때만 나옵니다. `✗`(빨강)는 unstaged 변경, `+`(초록)는 staged 변경을 뜻합니다.
