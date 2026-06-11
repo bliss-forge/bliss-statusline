@@ -3,7 +3,7 @@
 # 신호등 바(초록<50 / 노랑50-79 / 빨강≥80), 토큰 사용량 표시, 비용 없음
 #
 #   LINE 1  📂 …/slack-offboarding-bot │ 🌿(main) ✗ │ 🧠 Opus 4.8 │ high 💡
-#   LINE 2  📝 █░░░░░░░░░░░░░░ 9% 89K/1M │ 🚀 5H ███████░░░ 75% (3시간 14분)
+#   LINE 2  📝 █░░░░░░░░░░░░░░ 9% 89K/1M │ ⏳ 5H ███████░░░ 75% (3시간 14분)
 
 input=$(cat)
 
@@ -102,7 +102,7 @@ if [ -n "$used" ] && [ "$used" != "null" ]; then
       printf "%s/%s", uk, tt
     }')
   fi
-  line2=$(printf '\033[2m📝\033[0m %b%s\033[0m \033[1m%d%%\033[0m \033[2m%s\033[0m' "$BARC" "$BAR" "$used_int" "$tok")
+  line2=$(printf '\033[2m📝\033[0m %b%s\033[0m \033[1m%b%d%%\033[0m \033[2m%s\033[0m' "$BARC" "$BAR" "$BARC" "$used_int" "$tok")
 fi
 
 # 5H 사용량 한도 (Pro/Max 전용)
@@ -116,7 +116,7 @@ if [ -n "$fh_pct" ] && [ "$fh_pct" != "null" ]; then
       if [ "$h" -gt 0 ]; then reset_str=" \033[2m(${h}시간 ${m}분)\033[0m"; else reset_str=" \033[2m(${m}분)\033[0m"; fi
     fi
   fi
-  fh_seg=$(printf '\033[2m🚀 5H\033[0m %b%s\033[0m %d%%' "$BARC" "$BAR" "$fh_int")
+  fh_seg=$(printf '\033[2m⏳ 5H\033[0m %b%s\033[0m \033[1m%b%d%%\033[0m' "$BARC" "$BAR" "$BARC" "$fh_int")
   fh_seg="${fh_seg}${reset_str}"
   if [ -z "$line2" ]; then line2="$fh_seg"; else line2="${line2}${SEP}${fh_seg}"; fi
 fi
